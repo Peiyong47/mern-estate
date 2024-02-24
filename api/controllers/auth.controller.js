@@ -1,7 +1,8 @@
 import User from "../models/user.model.js";
 import bcryptjs from 'bcryptjs';
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
     // get the signup data from the request body
     const { username, email, password } = req.body;
     // hash the password where the 10 is the salt number which is the number of round for creating the salt
@@ -16,7 +17,7 @@ export const signup = async (req, res) => {
         res.status(201).json("New user created successfully!");
     } catch (error)
     {
-        res.status(500).json(error.message);
+        next(error);
     }
     
 };
