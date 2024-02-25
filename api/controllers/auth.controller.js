@@ -12,6 +12,7 @@ export const signup = async (req, res, next) => {
     const hashedPassword = bcryptjs.hashSync(password, 10);
 
     // save the new user data to the database
+    // create User collection in mongodb
     const newUser = new User({ username, email, password: hashedPassword });
     try {
         await newUser.save();
