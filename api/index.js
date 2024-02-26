@@ -16,6 +16,7 @@ mongoose.connect(process.env.MONGO)
         console.log("Error connecting to MongoDB: ", err);
     });
 
+// Create a new express application instance
 const app = express();
 
 // allow JSON as input for the server
