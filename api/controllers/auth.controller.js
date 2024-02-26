@@ -48,4 +48,46 @@ export const signin = async (req, res, next) => {
     } catch (error) {
         next(error);
     }
+};
+
+export const google = async (req, res, next) => {
+    try {
+        const user = await User.findOne({ email: req.body.email })
+            // if user exists, authenticate and sign in the user
+        if (user) {
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            const { password: pass, ...rest } = user._doc;
+            res
+            .cookie('access_token', token, { httpOnly: true })
+            .status(200)
+            .json(rest);
+  
+        } else {
+            // if user does not exist, create a new user
+            // but in the user model, we set the password as required, so we need to generate a random password for the user
+            // then the user can change the password later
+            // the 36 means number from zero to nine & letters from A to Z
+            // .slice(-8) means we want to get the last 8 characters from the generated password
+        const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+        // then again hash the generated password
+        const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+        const newUser = new User({ 
+             // create a username by taking the display name from google oauth and remove the spaces and convert to lowercase
+            // + add 4 random characters to make the username unique
+            username: req.body.name.split(" ").join("").toLowerCase() + Math.random().toString(36).slice(-4) , 
+            email: req.body.email, 
+            password: hashedPassword, 
+            avatar: req.body.photo 
+        });
+        await newUser.save();
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
+        const { password: pass, ...rest } = newUser._doc;
+        res.cookie('access_token', token, { httpOnly: true }).status(200).json(rest);
+  
+      }
+    } catch (error) {
+      next(error)
+    }
 }
+
+
