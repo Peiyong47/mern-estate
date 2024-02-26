@@ -9,6 +9,7 @@ import Header from './components/Header'
 import PrivateRoute from './components/PrivateRoute'
 import CreateListing from './pages/CreateListing'
 import UpdateListing from './pages/UpdateListing'
+import Listing from './pages/Listing'
 
 export default function App() {
   // private route is to cover the pages that only logged in users can access
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/listing/:listingId" element={<Listing />} />
         
         <Route element={<PrivateRoute />} >
           <Route path="/profile" element={<Profile />} />
