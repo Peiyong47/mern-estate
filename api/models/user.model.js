@@ -20,6 +20,8 @@ const userSchema = new mongoose.Schema({
     },
 }, {timestamps: true});
 
+// the ('User') is the name of the collection in the database (it will be created if it doesn't exist yet
+// in MongoDB, the collection name need to be in uppercase and singular form
 const User = mongoose.model('User', userSchema);
 
 export default User;
