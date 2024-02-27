@@ -5,6 +5,7 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
 import cookieParser from "cookie-parser";
+import path from "path";
 
 dotenv.config(); // Load the .env file
 
@@ -15,6 +16,8 @@ mongoose.connect(process.env.MONGO)
     .catch((err) => {
         console.log("Error connecting to MongoDB: ", err);
     });
+
+    const _dirname = path.resolve();
 
 // Create a new express application instance
 const app = express();
@@ -32,6 +35,12 @@ app.listen(3000, () => {
 app.use("/api/user", userRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/listing", listingRouter);
+
+app.use(express.static(path.join(_dirname, '/client/dist')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html' ));
+})
 
 // Error handling middleware
 app.use((err, req, res, next) => {
